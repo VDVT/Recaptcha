@@ -346,6 +346,26 @@ class ReCaptchaBuilder
     }
 
     /**
+     * getResult
+     *
+     * @return mixed
+     */
+    public function getResult($token)
+    {
+        $response = $this->validate($token);
+
+        if (is_bool($response)) {
+            return $response;
+        }
+
+        if (is_array($response)) {
+            return array_get($response, 'success') && ((float) array_get($response, 'score') >= 0.5);
+        }
+
+        return false;
+    }
+
+    /**
      * @return string
      */
     public function getApiSiteKey(): string

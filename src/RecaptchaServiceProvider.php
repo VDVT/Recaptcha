@@ -21,8 +21,8 @@ class RecaptchaServiceProvider extends ServiceProvider
         $this->registerRoutes();
 
         Validator::extendImplicit(ReCaptchaBuilder::DEFAULT_RECAPTCHA_RULE_NAME, function ($attribute, $value) {
-            return app('recaptcha')->validate($value);
-        }, trans('vdvt/validation::validation.recaptcha'));
+            return app('recaptcha')->getResult($value);
+        }, trans('vdvt/recaptcha::recaptcha.validation'));
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
