@@ -292,7 +292,6 @@ class ReCaptchaBuilder
      */
     public function validate($response)
     {
-
         if ($this->skipByIp) {
             if ($this->returnArray()) {
                 // Add 'skip_by_ip' field to response

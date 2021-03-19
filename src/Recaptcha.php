@@ -2,6 +2,8 @@
 
 namespace VDVT\Recaptcha;
 
+use Illuminate\Support\Arr;
+
 class Recaptcha extends ReCaptchaBuilder
 {
     /**
@@ -32,11 +34,11 @@ class Recaptcha extends ReCaptchaBuilder
      */
     public function htmlScriptTagJsApi( ? array $configuration = []) : string
     {
-        if ($this->skip_by_ip) {
+        if ($this->skipByIp) {
             return '';
         }
 
-        $html = "<script src=\"" . $this->api_js_url . "?render={$this->apiSiteKey}\"></script>";
+        $html = "<script src=\"" . $this->apiJsUrl . "?render={$this->apiSiteKey}\"></script>";
 
         $action = Arr::get($configuration, 'action', 'homepage');
 
@@ -44,7 +46,6 @@ class Recaptcha extends ReCaptchaBuilder
 
         // Check if set custom_validation. That function will override default fetch validation function
         if ($js_custom_validation) {
-
             $validate_function = ($js_custom_validation) ? "{$js_custom_validation}(token);" : '';
         } else {
 

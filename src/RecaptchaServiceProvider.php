@@ -3,7 +3,9 @@
 namespace VDVT\Recaptcha;
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use VDVT\Recaptcha\ReCaptchaBuilder;
 
 class RecaptchaServiceProvider extends ServiceProvider
 {
@@ -14,7 +16,13 @@ class RecaptchaServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'vdvt/recaptcha');
+
         $this->registerRoutes();
+
+        Validator::extendImplicit(ReCaptchaBuilder::DEFAULT_RECAPTCHA_RULE_NAME, function ($attribute, $value) {
+            return app('recaptcha')->validate($value);
+        }, trans('vdvt/validation::validation.recaptcha'));
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -60,7 +68,12 @@ class RecaptchaServiceProvider extends ServiceProvider
         // Publishing the configuration file.
         $this->publishes([
             __DIR__ . '/../config/recaptcha.php' => config_path('vdvt/recaptcha/recaptcha.php'),
-        ], 'recaptcha.config');
+        ], 'vdvt');
+
+        // Publishing the translation files.
+        $this->publishes([
+            __DIR__ . '/../resources/lang' => resource_path('lang/vendor/vdvt/recaptcha'),
+        ], 'vdvt');
     }
 
     /**
